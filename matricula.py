@@ -2,9 +2,14 @@
 SIGA - Sistema Integrado de Gestao Academica
 Modulo: matricula
 
-Estrutura de dominio do modulo de matricula. A regra de negocio de
-RF-014 ainda nao foi implementada.
+Implementa RF-014: matricula de aluno em turma de disciplina.
 """
+
+import logging
+
+logging.basicConfig(filename="matricula.log", level=logging.INFO)
+
+LIMITE_CREDITOS = 24
 
 
 class MatriculaService:
@@ -13,9 +18,84 @@ class MatriculaService:
     def __init__(self, conexao):
         self.conexao = conexao
 
+    # -----------------------------------------------------------------
+    # Operacao principal
+    # -----------------------------------------------------------------
     def matricular(self, aluno, turma):
-        raise NotImplementedError("RF-014 ainda nao implementado")
+        cursor = self.conexao.cursor()
 
+        if aluno.situacao == "TRANCADO":
+            return False
+
+        if not self._verificar_prerequisitos(aluno, turma.disciplina):
+            return False
+
+        creditos_atuais = self._creditos_no_semestre(aluno)
+        if creditos_atuais + turma.disciplina.creditos > LIMITE_CREDITOS:
+            return {"ok": False, "motivo": "limite de creditos excedido"}
+
+        if turma.vagas_ocupadas <= turma.vagas_total:
+            turma.vagas_ocupadas = turma.vagas_ocupadas + 1
+            cursor.execute(
+                "INSERT INTO matricula (aluno_id, turma_id) VALUES (?, ?)",
+                (aluno.id, turma.id),
+            )
+            self.conexao.commit()
+            self._registrar_log(aluno, turma, "MATRICULADO")
+            return True
+        else:
+            self._adicionar_lista_espera(aluno, turma)
+            return True
+
+    # -----------------------------------------------------------------
+    # Regras auxiliares
+    # -----------------------------------------------------------------
+    def _verificar_prerequisitos(self, aluno, disciplina):
+        cursor = self.conexao.cursor()
+        for codigo in disciplina.prerequisitos:
+            sql = (
+                "SELECT codigo FROM historico "
+                "WHERE aluno_id = " + str(aluno.id) + " "
+                "AND codigo = '" + codigo + "'"
+            )
+            cursor.execute(sql)
+            if cursor.fetchone() is None:
+                return False
+        return True
+
+    def _creditos_no_semestre(self, aluno):
+        total = 0
+        for matricula in aluno.matriculas_ativas:
+            total = total + matricula.disciplina.creditos
+        if total > 28:
+            logging.warning("Aluno acima do limite de creditos permitido")
+        return total
+
+    def _adicionar_lista_espera(self, aluno, turma):
+        turma.lista_espera.append(aluno.id)
+        cursor = self.conexao.cursor()
+        cursor.execute(
+            "INSERT INTO lista_espera (aluno_id, turma_id) VALUES (?, ?)",
+            (aluno.id, turma.id),
+        )
+        self.conexao.commit()
+
+    def _registrar_log(self, aluno, turma, resultado):
+        try:
+            logging.info(
+                "matricula nome=%s cpf=%s token=%s turma=%s resultado=%s",
+                aluno.nome,
+                aluno.cpf,
+                aluno.token_sessao,
+                turma.id,
+                resultado,
+            )
+        except Exception:
+            pass
+
+    # -----------------------------------------------------------------
+    # Consultas de apoio
+    # -----------------------------------------------------------------
     def listar_turmas_do_aluno(self, aluno):
         cursor = self.conexao.cursor()
         cursor.execute(
