@@ -137,7 +137,15 @@ pre.prompt{background:var(--sunk);border:1px solid var(--line);border-radius:var
 }
 
 @media print{
+  @page{size:A4 portrait;margin:8mm}
   .top,.noprint{display:none!important}
+  .folhaqr{margin:0}
+  .qrsheet{grid-template-columns:repeat(2,1fr);gap:4mm}
+  .qrcell{padding:6mm 4mm;break-inside:avoid;page-break-inside:avoid}
+  .qrcell canvas,.qrcell img{width:34mm;height:34mm;padding:2mm}
+  .qrcell .g{font-size:13pt}
+  .qrcell .note{font-size:7pt;margin-bottom:2mm!important}
+  .qrcell .u{font-size:5.5pt;margin-top:2mm}
   body.so-ata #app > section:not(#ataBloco){display:none!important}
   body.so-ata .row{display:none!important}
   input,select,textarea{border:none;border-bottom:1px solid #999;background:none;padding:2px 0}
@@ -609,7 +617,7 @@ function telaPainel(){
   document.title = "Painel da squad · Campeonato de Revisão";
   document.getElementById("topTag").textContent = "SQUAD";
   document.getElementById("topModo").textContent = "Painel da atividade";
-  let h = '<section style="margin-top:26px"><span class="eyebrow">Uso interno da squad</span>' +
+  let h = '<section class="noprint" style="margin-top:26px"><span class="eyebrow">Uso interno da squad</span>' +
     "<h1>Painel da atividade</h1>" +
     '<p class="note">Uma folha de QRs para recortar e distribuir — é o que substitui os cartões, o checklist e os envelopes de prompt. ' +
     "Não projete esta tela: ela revela o modo de cada grupo.</p>" +
@@ -623,7 +631,7 @@ function telaPainel(){
        '<p class="note">Teste um: abra <code>&lt;link&gt;?g=1</code> numa aba anônima. Se cair na tela de escolha de grupo em vez do cartão do G1, ' +
        "tudo bem — o aluno toca no número do grupo e chega no mesmo lugar.</p></section>";
 
-  h += '<section><div class="sec-head"><span class="eyebrow">Distribuição — recortar nas linhas tracejadas</span></div>' +
+  h += '<section class="folhaqr"><div class="sec-head noprint"><span class="eyebrow">Distribuição — recortar nas linhas tracejadas</span></div>' +
        '<div class="qrsheet" id="qrsheet"></div></section>';
 
   h += '<section class="panelcard noprint"><div class="sec-head"><span class="eyebrow">Como a squad recolhe</span></div>' +
