@@ -28,7 +28,7 @@ Sem dependências externas. Python 3.8+.
 
 ## O que fazer
 
-O desenvolvedor **@dev.junior** abriu o **[Pull Request #142](../../pull/142)**,
+O desenvolvedor **@dev.junior** abriu o **[Pull Request #1](../../pull/1)**,
 que implementa o requisito **RF-014 — Matrícula de aluno em turma de disciplina**.
 
 Ele escreveu na descrição do PR:
@@ -41,7 +41,7 @@ O pipeline está verde. A pessoa que revisaria o PR está de férias.
 
 ## Por onde começar
 
-1. Abra o **[PR #142 → aba *Files changed*](../../pull/142/files)** — é o diff que vocês vão revisar
+1. Abra o **[PR #1 → aba *Files changed*](../../pull/1/files)** — é o diff que vocês vão revisar
 2. Leia **[`docs/RF-014.md`](docs/RF-014.md)** — a especificação é a **fonte da verdade**
 3. Leia **[`CONTRIBUTING.md`](CONTRIBUTING.md)** — o padrão de codificação da equipe
 4. Aplique **o modo de revisão do cartão que o seu grupo recebeu**, exatamente como está escrito
