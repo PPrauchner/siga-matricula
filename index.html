@@ -1,0 +1,682 @@
+<title>Campeonato de Revisão</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Public+Sans:ital,wght@0,400;0,500;0,600;1,400&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ink:#14181b; --ink-2:#4a555c; --ink-3:#7d888e;
+  --ground:#ecefee; --surface:#ffffff; --sunk:#f5f7f6;
+  --line:#d5dad9; --line-2:#e6eae9;
+  --accent:#0e5c63; --accent-ink:#ffffff; --accent-soft:#dceaea;
+  --sev-a:#a3291d; --sev-m:#8a5a00; --sev-b:#4a555c;
+  --ok:#1d6b47;
+  --radius:6px;
+  --font-display:"Archivo","Segoe UI",system-ui,sans-serif;
+  --font-body:"Public Sans","Segoe UI",system-ui,sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ink:#e8edeb; --ink-2:#a7b3b4; --ink-3:#7f8c8d;
+    --ground:#121718; --surface:#1a2123; --sunk:#151b1d;
+    --line:#2c3639; --line-2:#232b2d;
+    --accent:#5cbcc2; --accent-ink:#08292c; --accent-soft:#1d3336;
+    --sev-a:#e58a7e; --sev-m:#d7a95a; --sev-b:#a7b3b4;
+    --ok:#6cc39a;
+  }
+}
+:root[data-theme="dark"]{
+  --ink:#e8edeb; --ink-2:#a7b3b4; --ink-3:#7f8c8d;
+  --ground:#121718; --surface:#1a2123; --sunk:#151b1d;
+  --line:#2c3639; --line-2:#232b2d;
+  --accent:#5cbcc2; --accent-ink:#08292c; --accent-soft:#1d3336;
+  --sev-a:#e58a7e; --sev-m:#d7a95a; --sev-b:#a7b3b4;
+  --ok:#6cc39a;
+}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font-family:var(--font-body);line-height:1.55;font-size:15.5px}
+.wrap{max-width:1080px;margin:0 auto;padding-inline:18px;padding-block:0 64px}
+h1,h2,h3{font-family:var(--font-display);text-wrap:balance;margin:0}
+h1{font-size:1.9rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.18rem;font-weight:600;letter-spacing:-.005em}
+h3{font-size:.95rem;font-weight:600}
+p{margin:.5em 0;max-width:68ch}
+a{color:var(--accent);text-underline-offset:2px}
+code,.mono{font-family:var(--font-mono);font-size:.92em}
+.eyebrow{font-family:var(--font-mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-3)}
+
+/* topo */
+.top{background:var(--surface);border-bottom:1px solid var(--line);position:sticky;top:0;z-index:20}
+.top-in{max-width:1080px;margin:0 auto;padding:10px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.tag{font-family:var(--font-mono);font-weight:500;font-size:.82rem;background:var(--accent);color:var(--accent-ink);padding:3px 9px;border-radius:4px;white-space:nowrap}
+.top .modo{font-family:var(--font-display);font-weight:600;font-size:.95rem}
+.top .clock{margin-left:auto;font-family:var(--font-mono);font-size:.82rem;color:var(--ink-3)}
+
+section{margin-top:28px}
+.panelcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.sec-head{display:flex;align-items:baseline;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+hr{border:0;border-top:1px solid var(--line-2);margin:22px 0}
+
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:7px 9px;border-bottom:1px solid var(--line-2);vertical-align:top}
+th{font-family:var(--font-display);font-weight:600;font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-2)}
+.scroll{overflow-x:auto}
+ol,ul{padding-left:1.2em;margin:.5em 0}
+li{margin:.3em 0}
+
+.rule{border-left:3px solid var(--accent);background:var(--accent-soft);padding:10px 14px;border-radius:0 var(--radius) var(--radius) 0;margin:14px 0}
+.rule strong{font-family:var(--font-display)}
+.note{color:var(--ink-2);font-size:.92rem}
+
+input,select,textarea,button{font:inherit;color:inherit}
+input,select,textarea{background:var(--sunk);border:1px solid var(--line);border-radius:4px;padding:6px 8px;width:100%;max-width:100%}
+textarea{resize:none;overflow:hidden;min-height:56px;line-height:1.5}
+input:focus-visible,select:focus-visible,textarea:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+label{display:block;font-size:.8rem;font-weight:600;color:var(--ink-2);margin-bottom:3px}
+.grid2{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.btn{background:var(--accent);color:var(--accent-ink);border:1px solid transparent;border-radius:4px;padding:8px 15px;font-weight:600;font-family:var(--font-display);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent);border-color:var(--line)}
+.btn:hover{filter:brightness(1.08)}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.voltar{padding:4px 10px;font-size:.82rem}
+
+pre.prompt{background:var(--sunk);border:1px solid var(--line);border-radius:var(--radius);padding:14px;overflow-x:auto;font-family:var(--font-mono);font-size:.84rem;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.check li{list-style:none}
+.check ul{padding-left:0}
+.check label.item{display:flex;gap:9px;font-weight:400;font-size:.93rem;color:var(--ink);margin-bottom:7px;align-items:flex-start}
+.check input[type=checkbox]{width:auto;margin-top:4px;accent-color:var(--accent)}
+.ck-num{font-family:var(--font-mono);color:var(--ink-3);font-size:.85em}
+
+.status{font-size:.85rem;color:var(--ink-3);font-family:var(--font-mono)}
+.status.ok{color:var(--ok)}
+.status.err{color:var(--sev-a)}
+.sev-A{color:var(--sev-a);font-weight:600}
+.sev-M{color:var(--sev-m);font-weight:600}
+.sev-B{color:var(--sev-b)}
+.num{font-variant-numeric:tabular-nums}
+
+.qrsheet{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px}
+.qrcell{border:1px dashed var(--line);border-radius:var(--radius);padding:14px;text-align:center;background:var(--surface)}
+.qrcell canvas,.qrcell img{max-width:100%;height:auto;background:#fff;padding:6px;border-radius:4px}
+.qrcell .g{font-family:var(--font-display);font-weight:700;font-size:1.1rem}
+.qrcell .u{font-family:var(--font-mono);font-size:.62rem;color:var(--ink-3);word-break:break-all;margin-top:6px}
+
+
+/* larguras da tabela de defeitos — a descrição precisa caber sem scroll */
+#tabDefeitos{min-width:700px;table-layout:fixed}
+#tabDefeitos .c-id{width:52px}
+#tabDefeitos .c-arq{width:150px}
+#tabDefeitos .c-tipo{width:84px}
+#tabDefeitos .c-sev{width:72px}
+#tabDefeitos .c-desc{width:auto;min-width:240px}
+#tabDefeitos .c-quem{width:110px}
+#tabDefeitos .c-orig{width:82px}
+#tabDefeitos textarea{min-height:82px}
+#ataBloco textarea{min-height:68px}
+
+/* celular: tabela vira ficha, uma linha por bloco */
+@media (max-width:900px){
+  body{font-size:16px}
+  .wrap{padding-inline:14px}
+  h1{font-size:1.55rem}
+  .top-in{padding:8px 14px;gap:8px}
+  .top .clock{margin-left:0;flex-basis:100%}
+  .scroll.stack{overflow-x:visible}
+  table.stack{min-width:0!important;display:block}
+  table.stack thead{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+  table.stack tbody,table.stack tr,table.stack td{display:block;width:100%}
+  table.stack tr{border:1px solid var(--line);border-radius:var(--radius);background:var(--sunk);padding:12px;margin-bottom:12px}
+  table.stack td{border:none;padding:5px 0}
+  table.stack td::before{content:attr(data-rot);display:block;font-family:var(--font-display);font-size:.72rem;font-weight:600;text-transform:uppercase;letter-spacing:.06em;color:var(--ink-3);margin-bottom:3px}
+  table.stack td.c-id::before{display:none}
+  table.stack td.c-id{font-weight:700;color:var(--accent)}
+  #tabDefeitos .c-desc,#tabDefeitos .c-arq,#tabDefeitos .c-tipo,#tabDefeitos .c-sev,#tabDefeitos .c-quem,#tabDefeitos .c-orig{width:auto;min-width:0}
+  .btn{width:100%;text-align:center}
+  .voltar{width:auto;flex:0 0 auto}
+  .row .status{width:100%}
+  pre.prompt{font-size:.8rem}
+}
+
+@media print{
+  .top,.noprint{display:none!important}
+  body.so-ata #app > section:not(#ataBloco){display:none!important}
+  body.so-ata .row{display:none!important}
+  input,select,textarea{border:none;border-bottom:1px solid #999;background:none;padding:2px 0}
+  body{background:#fff;color:#000;font-size:11pt}
+  .panelcard{border:none;padding:0}
+  .qrcell{border:1px dashed #999;break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+
+<div class="top">
+  <div class="top-in">
+    <span class="tag" id="topTag">SIGA · PR #1</span>
+    <span class="modo" id="topModo">Campeonato de Revisão</span>
+    <span class="clock" id="topClock">15/09/2026 · 20 min de revisão</span>
+    <button class="btn ghost voltar" id="voltar" type="button" hidden>← trocar de grupo</button>
+  </div>
+</div>
+
+<div class="wrap" id="app"></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script>
+"use strict";
+
+/* O material da atividade vai codificado de proposito: quem abrir o fonte desta
+   pagina nao deve descobrir de bandeja qual modo caiu em qual grupo, nem que os
+   grupos de IA receberam prompts diferentes. Nao e segredo criptografico — e a
+   versao digital do envelope fechado. */
+
+const PR_URL = "https://github.com/PPrauchner/siga-matricula/pull/1/files";
+const REPO = "https://github.com/PPrauchner/siga-matricula";
+
+/* Entrega da ata.
+   FORM_URL: endereco do Google Forms (o link "Enviar" do formulario, terminado
+   em /viewform). Vazio = o botao "Enviar a ata" nao aparece.
+   FORM_CAMPO_GRUPO: id do campo "Grupo" no formulario, no formato entry.123456789,
+   para o numero do grupo ja ir marcado. Como descobrir: no formulario, menu de
+   tres pontos > "Gerar link pre-preenchido", escolha o Grupo 1, copie o link e
+   pegue o trecho entry.NNNNNNN. Vazio = o aluno marca o grupo na mao. */
+const FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSeX_3eFfuBB89zDGackKnfmhNMRu-ygn6QCM0rymWEog0ivcA/viewform";
+const FORM_CAMPO_GRUPO = "entry.1938050873";
+
+const __BLOB = "eyJNT0RPUyI6eyJNMSI6eyJub21lIjoiUmV2aXPDo28gSW5mb3JtYWwgKGFkIGhvYykiLCJzdWIiOiJwZWVyIGRlc2stY2hlY2sg4oCUIG8gcXVlIGEgbWFpb3JpYSBkYXMgZXF1aXBlcyBkZSB2ZXJkYWRlIGZheiwgZSBvIG5vc3NvIGdydXBvIGRlIGNvbnRyb2xlIiwicGFwZWlzIjpbWyJSZXZpc29yIiwidG9kb3MiLCJMw6ogbyBjw7NkaWdvIGUgYXBvbnRhIG8gcXVlIGFjaGFyIGVzdHJhbmhvIl0sWyJFc2NyaWJhIiwiMSAoYWN1bXVsYSBjb20gcmV2aXNvcikiLCJBbm90YSBvcyBhY2hhZG9zIG5hIGF0YSJdXSwicHJvYyI6WyI8c3Ryb25nPk7Do28gdXNlIGNoZWNrbGlzdC4gTsOjbyBkaXN0cmlidWEgw6FyZWFzLiBOw6NvIGxlaWEgbyBkb2N1bWVudG8gZGUgcmVxdWlzaXRvcyBwcmltZWlyby48L3N0cm9uZz4iLCJBYnJhbSBvIGRpZmYgZG8gUFIgIzEgKDxjb2RlPm1hdHJpY3VsYS5weTwvY29kZT4pIGUgbGVpYW0gZG8gY29tZcOnbyBhbyBmaW0sIGNvbWVudGFuZG8gZW0gdm96IGFsdGEgbyBxdWUgcGFyZWNlciBlcnJhZG8uIMOJIHVtYSBjb252ZXJzYSwgbsOjbyB1bSBwcm9jZXNzby4iLCJPIGVzY3JpYmEgYW5vdGEgdHVkbyBxdWUgbyBncnVwbyBjb25jb3JkYXIgcXVlIMOpIGRlZmVpdG8uIiwiU2UgYWxndcOpbSBxdWlzZXIgY29uc3VsdGFyIG8gcmVxdWlzaXRvIG5vIG1laW8gZG8gY2FtaW5obywgcG9kZSDigJQgbWFzIG5pbmd1w6ltIMOpIG9icmlnYWRvLiJdLCJyZXN0cmljb2VzIjpbIlNlbSBwcmVwYXJhw6fDo28gaW5kaXZpZHVhbC4gQ29tZWNlbSBhIGRpc2N1dGlyIGltZWRpYXRhbWVudGUuIiwiU2VtIGNyaXTDqXJpbyBkZSBwYXJhZGE6IGxlaWFtIGF0w6kgbyB0ZW1wbyBhY2FiYXIuIl0sInJlZ3JhIjpudWxsLCJtZW5vciI6bnVsbH0sIk0yIjp7Im5vbWUiOiJXYWxrdGhyb3VnaCBndWlhZG8gcGVsbyBhdXRvciIsInN1YiI6Im8gYXV0b3IgY29uZHV6IGEgcGxhdGVpYSBwZWxvIHJhY2lvY8OtbmlvIGRlbGUg4oCUIGZvcm1hbGlkYWRlIGJhaXhhLCBmb2NvIGVtIGVudGVuZGltZW50byBjb21wYXJ0aWxoYWRvIiwicGFwZWlzIjpbWyJBdXRvciIsIjEiLCJBc3N1bWUgbyBwYXBlbCBkbyBAZGV2Lmp1bmlvci4gTMOqIG8gY8OzZGlnbyBlbSB2b3ogYWx0YSBlIDxzdHJvbmc+ZXhwbGljYSBhIGludGVuw6fDo28gZGUgY2FkYSBibG9jbzwvc3Ryb25nPiwgY29tbyBzZSBkZWZlbmRlc3NlIG8gUFIiXSxbIlBhcnRpY2lwYW50ZXMiLCIzIiwiSW50ZXJyb21wZW0gY29tIHBlcmd1bnRhcy4gTsOjbyBwb2RlbSBhZmlybWFyICZsZHF1bztpc3NvIGVzdMOhIGVycmFkbyZyZHF1bzsg4oCUIHPDsyBwb2RlbSA8c3Ryb25nPnBlcmd1bnRhcjwvc3Ryb25nPjogJmxkcXVvO28gcXVlIGFjb250ZWNlIHNlJmhlbGxpcDs/JnJkcXVvOywgJmxkcXVvO3BvciBxdWUgYXF1aSDDqSA8Y29kZT4mbHQ7PTwvY29kZT4/JnJkcXVvOyJdLFsiRXNjcmliYSIsIjEiLCJBbm90YSBvcyBwb250b3MgZW0gcXVlIG8gYXV0b3IgPHN0cm9uZz5oZXNpdG91LCBzZSBjb250cmFkaXNzZSBvdSBuw6NvIHNvdWJlIHJlc3BvbmRlcjwvc3Ryb25nPiJdXSwicHJvYyI6WyI8c3Ryb25nPigzIG1pbik8L3N0cm9uZz4gTyBBdXRvciBsw6ogc296aW5obyBvIGPDs2RpZ28gcGFyYSBjb25zZWd1aXIgZXhwbGljw6EtbG8uIiwiPHN0cm9uZz4oMTQgbWluKTwvc3Ryb25nPiBPIEF1dG9yIHBlcmNvcnJlIG8gYXJxdWl2byBkZSBjaW1hIGEgYmFpeG8gZXhwbGljYW5kby4gT3MgcGFydGljaXBhbnRlcyBzw7MgZmF6ZW0gcGVyZ3VudGFzLiIsIjxzdHJvbmc+KDMgbWluKTwvc3Ryb25nPiBPIGdydXBvIGNvbnZlcnRlIGFzIGhlc2l0YcOnw7VlcyBkbyBhdXRvciBlbSBkZWZlaXRvcyBuYSBhdGEuIl0sInJlc3RyaWNvZXMiOltdLCJyZWdyYSI6IlBhcnRpY2lwYW50ZSBxdWUgYWZpcm1hciB1bSBkZWZlaXRvIGVtIHZleiBkZSBwZXJndW50YXIgcGVyZGUgYSB2ZXouIEEgdMOpY25pY2Egw6k6IDxzdHJvbmc+YSBwZXJndW50YSBjZXJ0YSBmYXogbyBhdXRvciBhY2hhciBvIHByw7NwcmlvIGRlZmVpdG8uPC9zdHJvbmc+IiwibWVub3IiOiJUaXJlIGRvcyA8c3Ryb25nPlBhcnRpY2lwYW50ZXM8L3N0cm9uZz4uIEF1dG9yIGUgRXNjcmliYSBudW5jYSBzYWVtLiBPIHBpc28gZG8gbW9kbyDDqSA8c3Ryb25nPjM8L3N0cm9uZz4gKGF1dG9yICsgMSBwYXJ0aWNpcGFudGUgKyBlc2NyaWJhKSDigJQgYWJhaXhvIGRpc3NvIG7Do28gaMOhIHBsYXRlaWEgZSBvIHdhbGt0aHJvdWdoIHZpcmEgbGVpdHVyYSBlbSB2b3ogYWx0YS4ifSwiTTMiOnsibm9tZSI6IlJldmlzw6NvIFTDqWNuaWNhIGNvbSBjaGVja2xpc3QgZSBwYXDDqWlzIGZvcm1haXMiLCJzdWIiOiJvIG1vZG8gbWFpcyBwcsOzeGltbyBkbyBxdWUgYSBub3JtYSBJRUVFIDEwMjggY2hhbWEgZGUgdGVjaG5pY2FsIHJldmlldyIsInBhcGVpcyI6W1siTW9kZXJhZG9yIiwiMSIsIkNvbnRyb2xhIG8gdGVtcG8sIG1hbnTDqW0gbyBmb2NvIGVtIGRldGVjdGFyIChuw6NvIGVtIGNvbnNlcnRhciksIGNvcnRhIGRpc2N1c3PDo28gZGUgc29sdcOnw6NvIl0sWyJMZWl0b3IiLCIxIiwiQ29uZHV6IGEgbGVpdHVyYSBkbyBhcnRlZmF0byBlbSBvcmRlbSwgaXRlbSBkZSBjaGVja2xpc3QgcG9yIGl0ZW0gZGUgY2hlY2tsaXN0Il0sWyJSZXZpc29yIEEiLCIxIiwiQXBsaWNhIGEgPHN0cm9uZz5zZcOnw6NvIDEgZSAyPC9zdHJvbmc+IGRvIGNoZWNrbGlzdCAoY29uZm9ybWlkYWRlIGNvbSByZXF1aXNpdG8sIGzDs2dpY2EpIl0sWyJSZXZpc29yIEIiLCIxIiwiQXBsaWNhIGEgPHN0cm9uZz5zZcOnw6NvIDMgZSA0PC9zdHJvbmc+IGRvIGNoZWNrbGlzdCAoc2VndXJhbsOnYSwgdGVzdGVzKSJdLFsiUmV2aXNvciBDIiwiMSIsIkFwbGljYSBhIDxzdHJvbmc+c2XDp8OjbyA1PC9zdHJvbmc+IChtYW51dGVuaWJpbGlkYWRlKSBlIGZheiBvIGNvbnRyYWRpdMOzcmlvIGRvcyBkZW1haXMiXSxbIkVzY3JpYmEiLCIxIiwiUHJlZW5jaGUgYSBhdGEuIDxzdHJvbmc+TsOjbyBvcGluYS48L3N0cm9uZz4iXV0sInByb2MiOlsiPHN0cm9uZz4oNCBtaW4pIFByZXBhcmHDp8OjbyBpbmRpdmlkdWFsIGUgc2lsZW5jaW9zYS48L3N0cm9uZz4gQ2FkYSByZXZpc29yIGzDqiBvIDxjb2RlPmRvY3MvUkYtMDE0Lm1kPC9jb2RlPiBlIGRlcG9pcyBvIGRpZmYgZG8gUFIsIG1hcmNhbmRvIG8gcXVlIGRlci4gPGVtPlNlbSBjb252ZXJzYSBuZXN0YSBmYXNlLjwvZW0+IiwiPHN0cm9uZz4oMTMgbWluKSBSZXVuacOjby48L3N0cm9uZz4gTyBMZWl0b3IgY29uZHV6IGl0ZW0gYSBpdGVtIHBlbG8gY2hlY2tsaXN0IGFiYWl4by4gUGFyYSBjYWRhIGl0ZW0sIGNhZGEgcmV2aXNvciByZXBvcnRhLiBPIEVzY3JpYmEgcmVnaXN0cmEuIiwiPHN0cm9uZz4oMyBtaW4pPC9zdHJvbmc+IE8gTW9kZXJhZG9yIGNsYXNzaWZpY2EgY2FkYSBhY2hhZG8gZW0gc2V2ZXJpZGFkZSAoQWx0YSAvIE3DqWRpYSAvIEJhaXhhKS4iXSwicmVzdHJpY29lcyI6WyJOaW5ndcOpbSBwcm9ww7VlIGNvcnJlw6fDo28uIERlZmVpdG8gcmVnaXN0cmFkbyDDqSBkZWZlaXRvIGZlY2hhZG8uIiwiTyBNb2RlcmFkb3IgPHN0cm9uZz5uw6NvPC9zdHJvbmc+IHJldmlzYS4gTyB0cmFiYWxobyBkZWxlIMOpIG8gcHJvY2Vzc28uIl0sInJlZ3JhIjpudWxsLCJtZW5vciI6Ik8gPHN0cm9uZz5MZWl0b3IgYWN1bXVsYSBvIHBhcGVsIGRlIFJldmlzb3IgQzwvc3Ryb25nPiAoc2XDp8OjbyA1IGRvIGNoZWNrbGlzdCArIGNvbnRyYWRpdMOzcmlvKS4gTW9kZXJhZG9yIGUgRXNjcmliYSA8c3Ryb25nPm51bmNhPC9zdHJvbmc+IGFjdW11bGFtIG5hZGE6IHPDo28ganVzdGFtZW50ZSBvcyBwYXDDqWlzIHF1ZSBhIGF1bGEgcXVlciBtb3N0cmFyIGNvbW8gbsOjby1wcm9kdXRvcmVzIGRlIGFjaGFkby4ifSwiTTQtQSI6eyJub21lIjoiUmV2aXPDo28gYXNzaXN0aWRhIHBvciBJQSDigJQgcHJvbXB0IGdlbsOpcmljbyIsInN1YiI6ImNlbsOhcmlvIHJlYWxpc3RhOiAmbGRxdW87am9ndWVpIG8gY8OzZGlnbyBubyBjaGF0IGUgcGVkaSBwcmEgcmV2aXNhciZyZHF1bzsiLCJwYXBlaXMiOltbIk9wZXJhZG9yIiwiMSIsIkV4ZWN1dGEgbyA8c3Ryb25nPlBST01QVCBBPC9zdHJvbmc+IG5vIExMTSJdLFsiVHJpYWRvcmVzIiwiMyIsIlBhcmEgY2FkYSBhY2hhZG8gZGEgSUEsIGRlY2lkZW06IDxzdHJvbmc+Y29uZmlybWFkbzwvc3Ryb25nPiwgPHN0cm9uZz5mYWxzbyBwb3NpdGl2bzwvc3Ryb25nPiBvdSA8c3Ryb25nPm7Do28gc2VpPC9zdHJvbmc+IOKAlCBhYnJpbmRvIG8gY8OzZGlnbyBwYXJhIGNoZWNhciJdLFsiQ2HDp2Fkb3IgZGUgb21pc3PDtWVzIiwiMSIsIkzDqiBvIGPDs2RpZ28gcG9yIGNvbnRhIHByw7NwcmlhIHByb2N1cmFuZG8gbyBxdWUgYSBJQSA8c3Ryb25nPm7Do288L3N0cm9uZz4gZGlzc2UiXSxbIkVzY3JpYmEiLCIxIiwiUHJlZW5jaGUgYSBhdGEsIG1hcmNhbmRvIGEgb3JpZ2VtIGRlIGNhZGEgYWNoYWRvIChJQSAvIGh1bWFubykiXV0sInByb2MiOlsiPHN0cm9uZz4oNCBtaW4pPC9zdHJvbmc+IE8gT3BlcmFkb3Igcm9kYSBvIDxzdHJvbmc+UFJPTVBUIEE8L3N0cm9uZz4gZXhhdGFtZW50ZSBjb21vIGVzdMOhIGVzY3JpdG8uIiwiPHN0cm9uZz4oMTEgbWluKSBUcmlhZ2VtOjwvc3Ryb25nPiBpdGVtIHBvciBpdGVtLCBvIGdydXBvIGNvbmZpcm1hIG91IGRlc2NhcnRhLiA8c3Ryb25nPk5hZGEgZW50cmEgbmEgYXRhIHNlbSBzZXIgdmVyaWZpY2FkbyBubyBjw7NkaWdvLjwvc3Ryb25nPiIsIjxzdHJvbmc+KDUgbWluKTwvc3Ryb25nPiBPIENhw6dhZG9yIHJlcG9ydGEgbyBxdWUgZmFsdG91OyBvIGdydXBvIGRlY2lkZSBvIHF1ZSBpbmNsdWlyLiJdLCJyZXN0cmljb2VzIjpbXSwicmVncmEiOiI8c3Ryb25nPk5lbmh1bSBhY2hhZG8gZGEgSUEgdmFpIHBhcmEgYSBhdGEgc2VtIGNvbmZpcm1hw6fDo28gaHVtYW5hIG5vIGPDs2RpZ28uPC9zdHJvbmc+IEZhbHNvIHBvc2l0aXZvIGFjZWl0byBjb250YSBjb250cmEgbyBncnVwbyBubyBxdWFkcm8gZmluYWwuIiwibWVub3IiOiJUcsOqcyBUcmlhZG9yZXMgdmlyYW0gPHN0cm9uZz5kb2lzPC9zdHJvbmc+LiBPcGVyYWRvciwgQ2HDp2Fkb3IgZGUgb21pc3PDtWVzIGUgRXNjcmliYSBwZXJtYW5lY2VtIOKAlCBvIENhw6dhZG9yIMOpIHF1ZW0gc3VzdGVudGEgYSBwZXJndW50YSAmbGRxdW87byBxdWUgYSBJQSA8c3Ryb25nPm7Do288L3N0cm9uZz4gZGlzc2UmcmRxdW87LiJ9LCJNNC1CIjp7Im5vbWUiOiJSZXZpc8OjbyBhc3Npc3RpZGEgcG9yIElBIOKAlCBwcm9tcHQgZXN0cnV0dXJhZG8iLCJzdWIiOiJtZXNtbyBtb2RlbG8sIG1lc21vIGPDs2RpZ28sIG1lc21vIHRlbXBvLiBTw7MgbXVkYSBvIHF1ZSBzZSBlbnRyZWdhIMOgIElBIiwicGFwZWlzIjpbWyJPcGVyYWRvciIsIjEiLCJFeGVjdXRhIG8gPHN0cm9uZz5QUk9NUFQgQjwvc3Ryb25nPiBubyBMTE0iXSxbIlRyaWFkb3JlcyIsIjMiLCJQYXJhIGNhZGEgYWNoYWRvIGRhIElBLCBkZWNpZGVtOiA8c3Ryb25nPmNvbmZpcm1hZG88L3N0cm9uZz4sIDxzdHJvbmc+ZmFsc28gcG9zaXRpdm88L3N0cm9uZz4gb3UgPHN0cm9uZz5uw6NvIHNlaTwvc3Ryb25nPiDigJQgYWJyaW5kbyBvIGPDs2RpZ28gcGFyYSBjaGVjYXIiXSxbIkNhw6dhZG9yIGRlIG9taXNzw7VlcyIsIjEiLCJMw6ogbyBjw7NkaWdvIHBvciBjb250YSBwcsOzcHJpYSBwcm9jdXJhbmRvIG8gcXVlIGEgSUEgPHN0cm9uZz5uw6NvPC9zdHJvbmc+IGRpc3NlIl0sWyJFc2NyaWJhIiwiMSIsIlByZWVuY2hlIGEgYXRhLCBtYXJjYW5kbyBhIG9yaWdlbSBkZSBjYWRhIGFjaGFkbyAoSUEgLyBodW1hbm8pIl1dLCJwcm9jIjpbIjxzdHJvbmc+KDUgbWluKTwvc3Ryb25nPiBPIE9wZXJhZG9yIHJvZGEgbyA8c3Ryb25nPlBST01QVCBCPC9zdHJvbmc+LCBxdWUgaW5jbHVpIG8gcmVxdWlzaXRvIFJGLTAxNCBjb21wbGV0bywgbyBwYXBlbCBlc3BlcmFkbywgbyBjaGVja2xpc3QgZSBvIGZvcm1hdG8gZGUgc2HDrWRhLiIsIjxzdHJvbmc+KDEwIG1pbikgVHJpYWdlbTwvc3Ryb25nPiBjb25maXJtYW5kbyBjYWRhIGFjaGFkbyBubyBjw7NkaWdvLiIsIjxzdHJvbmc+KDUgbWluKTwvc3Ryb25nPiBPIENhw6dhZG9yIGRlIG9taXNzw7VlcyByZXBvcnRhIG8gcXVlIGEgSUEgYWluZGEgZGVpeG91IHBhc3Nhci4iXSwicmVzdHJpY29lcyI6W10sInJlZ3JhIjoiPHN0cm9uZz5OZW5odW0gYWNoYWRvIGRhIElBIHZhaSBwYXJhIGEgYXRhIHNlbSBjb25maXJtYcOnw6NvIGh1bWFuYSBubyBjw7NkaWdvLjwvc3Ryb25nPiBGYWxzbyBwb3NpdGl2byBhY2VpdG8gY29udGEgY29udHJhIG8gZ3J1cG8gbm8gcXVhZHJvIGZpbmFsLiIsIm1lbm9yIjoiVHLDqnMgVHJpYWRvcmVzIHZpcmFtIDxzdHJvbmc+ZG9pczwvc3Ryb25nPi4gT3BlcmFkb3IsIENhw6dhZG9yIGRlIG9taXNzw7VlcyBlIEVzY3JpYmEgcGVybWFuZWNlbS4ifSwiTTUiOnsibm9tZSI6IkxlaXR1cmEgQmFzZWFkYSBlbSBQZXJzcGVjdGl2YSIsInN1YiI6InBlcnNwZWN0aXZlLWJhc2VkIHJlYWRpbmcg4oCUIGNhZGEgcmV2aXNvciBsw6ogbyBtZXNtbyBhcnRlZmF0byBjb20gdW0gcGFyIGRlIMOzY3Vsb3MgZGlmZXJlbnRlIiwicGFwZWlzIjpbWyJQZXJzcGVjdGl2YSBDbGllbnRlIC8gUmVxdWlzaXRvIiwiMSIsIiZsZHF1bztBYnJvIG8gUkYtMDE0IGFvIGxhZG8gZG8gY8OzZGlnby4gQ2FkYSByZWdyYSBSTi0wMSBhIFJOLTA4IGVzdMOhIGltcGxlbWVudGFkYT8gT25kZT8mcmRxdW87Il0sWyJQZXJzcGVjdGl2YSBUZXN0YWRvciIsIjEiLCImbGRxdW87UXVlIGNhc28gZGUgdGVzdGUgZXUgZXNjcmV2ZXJpYSBxdWUgcXVlYnJhcmlhIGVzdGUgY8OzZGlnbz8gT3MgdGVzdGVzIGV4aXN0ZW50ZXMgcHJvdmFtIGFsZ3VtYSBjb2lzYT8mcmRxdW87Il0sWyJQZXJzcGVjdGl2YSBBdGFjYW50ZSIsIjEiLCImbGRxdW87U2UgZXUgcXVpc2Vzc2UgaW52YWRpciBvdSB2YXphciBkYWRvIGRlc3RlIHNpc3RlbWEsIHBvciBvbmRlIGV1IGVudHJhcmlhPyZyZHF1bzsiXSxbIlBlcnNwZWN0aXZhIE1hbnRlbmVkb3IiLCIxIiwiJmxkcXVvO1ZvdSBtZXhlciBuaXNzbyBkYXF1aSBhIDggbWVzZXMgc2VtIG8gYXV0b3IuIE8gcXVlIHZhaSBtZSBhdHJhcGFsaGFyPyZyZHF1bzsiXSxbIlBlcnNwZWN0aXZhIE9wZXJhw6fDo28iLCIxIiwiJmxkcXVvO0lzc28gdmFpIHBhcmEgcHJvZHXDp8OjbyBubyBwaWNvIGRhIG1hdHLDrWN1bGEsIGNvbSAzMDAwIGFsdW5vcyBzaW11bHTDom5lb3MuIE8gcXVlIHF1ZWJyYT8mcmRxdW87Il0sWyJFc2NyaWJhIC8gTW9kZXJhZG9yIiwiMSIsIkNvbnNvbGlkYSwgZWxpbWluYSBkdXBsaWNhdGFzIGUgY3Jvbm9tZXRyYSJdXSwicHJvYyI6WyI8c3Ryb25nPigxMiBtaW4pIExlaXR1cmEgaW5kaXZpZHVhbCBlIHNpbGVuY2lvc2E8L3N0cm9uZz4sIGNhZGEgdW0gbmEgc3VhIHBlcnNwZWN0aXZhLiIsIjxzdHJvbmc+KDggbWluKSBSb2RhZGEgZGUgY29uc29saWRhw6fDo286PC9zdHJvbmc+IGNhZGEgcGVyc3BlY3RpdmEgcmVwb3J0YSBzZXVzIGFjaGFkb3M7IG8gRXNjcmliYSByZWdpc3RyYSBlIG1hcmNhIHF1YW5kbyBkb2lzIHBhcMOpaXMgYWNoYXJhbSBvIG1lc21vIGRlZmVpdG8uIl0sInJlc3RyaWNvZXMiOltdLCJyZWdyYSI6Ik7Do28gc2FpYSBkYSBzdWEgcGVyc3BlY3RpdmEuIFNlIG8gTWFudGVuZWRvciB2aXIgdW0gcHJvYmxlbWEgZGUgc2VndXJhbsOnYSwgZWxlIDxzdHJvbmc+YW5vdGEgbWFzIG7Do28gcmVwb3J0YTwvc3Ryb25nPiDigJQgcXVlbSByZXBvcnRhIMOpIG8gQXRhY2FudGUuIEEgcGVyZ3VudGEgaW50ZXJlc3NhbnRlIG5vIGZpbmFsIMOpOiA8ZW0+cXVhbnRvcyBkZWZlaXRvcyBzw7MgdW1hIHBlcnNwZWN0aXZhIHBlZ291PzwvZW0+IiwibWVub3IiOiJBIHBlcnNwZWN0aXZhIDxzdHJvbmc+TWFudGVuZWRvcjwvc3Ryb25nPiBhY3VtdWxhIG8gRXNjcmliYS9Nb2RlcmFkb3IuIDxzdHJvbmc+Q2xpZW50ZS9SZXF1aXNpdG88L3N0cm9uZz4gZSA8c3Ryb25nPk9wZXJhw6fDo288L3N0cm9uZz4gZmljYW0gaW50YWN0YXMg4oCUIGVsYXMgY2FycmVnYW0gb3MgZGVmZWl0b3MgZGUgY29uZm9ybWlkYWRlIGUgYSBjb25kacOnw6NvIGRlIGNvcnJpZGEuIn19LCJHUlVQT1MiOnsiMSI6eyJtb2RvIjoiTTEiLCJ0YW0iOjUsInBhcGVpcyI6WyJSZXZpc29yIiwiUmV2aXNvciIsIlJldmlzb3IiLCJSZXZpc29yIiwiUmV2aXNvciArIEVzY3JpYmEiXSwiZXh0cmEiOm51bGx9LCIyIjp7Im1vZG8iOiJNMiIsInRhbSI6NSwicGFwZWlzIjpbIkF1dG9yIiwiUGFydGljaXBhbnRlIiwiUGFydGljaXBhbnRlIiwiUGFydGljaXBhbnRlIiwiRXNjcmliYSJdLCJleHRyYSI6bnVsbH0sIjMiOnsibW9kbyI6Ik0zIiwidGFtIjo2LCJwYXBlaXMiOlsiTW9kZXJhZG9yIiwiTGVpdG9yIiwiUmV2aXNvciBBIiwiUmV2aXNvciBCIiwiUmV2aXNvciBDIiwiRXNjcmliYSJdLCJleHRyYSI6ImNoZWNrbGlzdCJ9LCI0Ijp7Im1vZG8iOiJNNC1BIiwidGFtIjo2LCJwYXBlaXMiOlsiT3BlcmFkb3IiLCJUcmlhZG9yIiwiVHJpYWRvciIsIlRyaWFkb3IiLCJDYcOnYWRvciBkZSBvbWlzc8O1ZXMiLCJFc2NyaWJhIl0sImV4dHJhIjoicHJvbXB0QSJ9LCI1Ijp7Im1vZG8iOiJNNSIsInRhbSI6NiwicGFwZWlzIjpbIkNsaWVudGUgLyBSZXF1aXNpdG8iLCJUZXN0YWRvciIsIkF0YWNhbnRlIiwiTWFudGVuZWRvciIsIk9wZXJhw6fDo28iLCJFc2NyaWJhIC8gTW9kZXJhZG9yIl0sImV4dHJhIjpudWxsfSwiNiI6eyJtb2RvIjoiTTMiLCJ0YW0iOjYsInBhcGVpcyI6WyJNb2RlcmFkb3IiLCJMZWl0b3IiLCJSZXZpc29yIEEiLCJSZXZpc29yIEIiLCJSZXZpc29yIEMiLCJFc2NyaWJhIl0sImV4dHJhIjoiY2hlY2tsaXN0In0sIjciOnsibW9kbyI6Ik00LUIiLCJ0YW0iOjYsInBhcGVpcyI6WyJPcGVyYWRvciIsIlRyaWFkb3IiLCJUcmlhZG9yIiwiVHJpYWRvciIsIkNhw6dhZG9yIGRlIG9taXNzw7VlcyIsIkVzY3JpYmEiXSwiZXh0cmEiOiJwcm9tcHRCIn19LCJDSEVDS0xJU1QiOltbIlNlw6fDo28gMSDigJQgQ29uZm9ybWlkYWRlIGNvbSBvIHJlcXVpc2l0byIsIlJldmlzb3IgQSIsW1siMS4xIiwiQ2FkYSByZWdyYSBkZSBuZWfDs2NpbyBkbyByZXF1aXNpdG8gdGVtIHVtIHRyZWNobyBkZSBjw7NkaWdvIGNvcnJlc3BvbmRlbnRlPyBBcG9udGUgcXVhbC4iXSxbIjEuMiIsIkV4aXN0ZSBhbGd1bWEgcmVncmEgZG8gcmVxdWlzaXRvIDxzdHJvbmc+c2VtIG5lbmh1bWE8L3N0cm9uZz4gaW1wbGVtZW50YcOnw6NvIG5vIGPDs2RpZ28/Il0sWyIxLjMiLCJPcyB2YWxvcmVzIGNvbnN0YW50ZXMgZG8gY8OzZGlnbyAobGltaXRlcywgcHJhem9zLCBxdWFudGlkYWRlcykgYmF0ZW0gY29tIG9zIG7Dum1lcm9zIGRvIGRvY3VtZW50byDigJQgPHN0cm9uZz5pbmNsdXNpdmUgY29tIGEgdmVyc8OjbyBtYWlzIHJlY2VudGUgZGVsZTwvc3Ryb25nPj8iXSxbIjEuNCIsIkFsZ3VtYSByZWdyYSBmb2kgaW1wbGVtZW50YWRhIGFwZW5hcyA8c3Ryb25nPnBhcmNpYWxtZW50ZTwvc3Ryb25nPiAodW0gY2FzbyB0cmF0YWRvLCBvdXRybyBlc3F1ZWNpZG8pPyJdLFsiMS41IiwiQ2FkYSBjcml0w6lyaW8gZGUgYWNlaXRhw6fDo28gcGFzc2FyaWEgbmVzdGUgY8OzZGlnbz8gUGVyY29ycmEgdW0gYSB1bS4iXSxbIjEuNiIsIk8gcmVxdWlzaXRvIGNvbnTDqW0gcG9udG9zIDxzdHJvbmc+YW1iw61ndW9zIG91IG7Do28gdmVyaWZpY8OhdmVpczwvc3Ryb25nPj8gKGlzc28gdGFtYsOpbSDDqSBkZWZlaXRvIOKAlCBkbyByZXF1aXNpdG8pIl1dXSxbIlNlw6fDo28gMiDigJQgTMOzZ2ljYSBlIGNhc29zIGRlIGJvcmRhIiwiUmV2aXNvciBBIixbWyIyLjEiLCJDb21wYXJhw6fDtWVzIGRlIGZyb250ZWlyYTogPGNvZGU+Jmx0OzwvY29kZT4gdnMgPGNvZGU+Jmx0Oz08L2NvZGU+LCA8Y29kZT4mZ3Q7PC9jb2RlPiB2cyA8Y29kZT4mZ3Q7PTwvY29kZT4g4oCUIG8gbGltaXRlIGVzdMOhIGluY2x1w61kbyBvdSBleGNsdcOtZG8gY29ycmV0YW1lbnRlPyJdLFsiMi4yIiwiTyBxdWUgYWNvbnRlY2UgY29tIGVudHJhZGEgdmF6aWEsIG51bGEsIHplcm8gb3UgbmVnYXRpdmE/Il0sWyIyLjMiLCJFeGlzdGUgdmVyaWZpY2HDp8OjbyBkZSB1bWEgY29uZGnDp8OjbyBzZWd1aWRhIGRlIGHDp8OjbyBzb2JyZSBlbGEgKDxlbT5jaGVjay10aGVuLWFjdDwvZW0+KT8gTyBlc3RhZG8gcG9kZSBtdWRhciBlbnRyZSBhcyBkdWFzPyJdLFsiMi40IiwiVW1hIGNvbmRpw6fDo28gZXN0w6Egc2VuZG8gdGVzdGFkYSBwb3IgdW0gPHN0cm9uZz5wcm94eTwvc3Ryb25nPiBlbSB2ZXogZG8gZmF0byByZWFsIChleC46ICZsZHF1bztleGlzdGUgcmVnaXN0cm8mcmRxdW87IHF1YW5kbyBvIHF1ZSBpbXBvcnRhIMOpICZsZHF1bztyZWdpc3RybyBjb20gcmVzdWx0YWRvIFgmcmRxdW87KT8iXSxbIjIuNSIsIlRvZG9zIG9zIGNhbWluaG9zIHJldG9ybmFtIGFsZ28gY29lcmVudGUgY29tIG8gY29udHJhdG8gZG8gbcOpdG9kbz8iXV1dLFsiU2XDp8OjbyAzIOKAlCBTZWd1cmFuw6dhIGUgcHJpdmFjaWRhZGUiLCJSZXZpc29yIEIiLFtbIjMuMSIsIlRvZGFzIGFzIGNvbnN1bHRhcyBhbyBiYW5jbyBzw6NvIDxzdHJvbmc+cGFyYW1ldHJpemFkYXM8L3N0cm9uZz4/IEjDoSBjb25jYXRlbmHDp8OjbyBkZSBlbnRyYWRhIGVtIFNRTD8iXSxbIjMuMiIsIkxvZ3MsIG1lbnNhZ2VucyBkZSBlcnJvIGUgZXhjZcOnw7VlcyB2YXphbSA8c3Ryb25nPmRhZG8gcGVzc29hbCwgY3JlZGVuY2lhbCBvdSB0b2tlbjwvc3Ryb25nPj8iXSxbIjMuMyIsIkjDoSB2YWxpZGHDp8OjbyBkYSBlbnRyYWRhIGFudGVzIGRlIHVzw6EtbGE/Il0sWyIzLjQiLCJGYWxoYXMgc8OjbyB0cmF0YWRhcyBkZSBmb3JtYSBxdWUgPHN0cm9uZz5uw6NvIGVzY29uZGFtPC9zdHJvbmc+IG8gZXJybz8iXSxbIjMuNSIsIk8gY8OzZGlnbyByZXNwZWl0YSBhcyByZXN0cmnDp8O1ZXMgbsOjbyBmdW5jaW9uYWlzIGRlY2xhcmFkYXMgKExHUEQsIHBhZHLDo28gZGUgY29kaWZpY2HDp8Ojbyk/Il1dXSxbIlNlw6fDo28gNCDigJQgVGVzdGVzIiwiUmV2aXNvciBCIixbWyI0LjEiLCJDYWRhIHJlZ3JhIGRlIG5lZ8OzY2lvIHRlbSBwZWxvIG1lbm9zIHVtIHRlc3RlPyJdLFsiNC4yIiwiT3MgdGVzdGVzIHZlcmlmaWNhbSA8c3Ryb25nPmNvbXBvcnRhbWVudG88L3N0cm9uZz4gb3UgYXBlbmFzIHF1ZSAmbGRxdW87bsOjbyBleHBsb2RpdSZyZHF1bzs/ICg8Y29kZT5hc3NlcnQgeCBpcyBub3QgTm9uZTwvY29kZT4gcHJvdmEgbyBxdcOqPykiXSxbIjQuMyIsIkV4aXN0ZW0gdGVzdGVzIHBhcmEgb3MgY2FtaW5ob3MgZGUgPHN0cm9uZz5mYWxoYSBlIHJlY3VzYTwvc3Ryb25nPiwgbsOjbyBzw7MgbyBjYW1pbmhvIGZlbGl6PyJdLFsiNC40IiwiQWxndW0gdGVzdGUgZXN0w6EgPHN0cm9uZz5jb25nZWxhbmRvIHVtIGNvbXBvcnRhbWVudG8gZXJyYWRvPC9zdHJvbmc+IOKAlCBpc3RvIMOpLCBmb2kgZXNjcml0byBhIHBhcnRpciBkbyBjw7NkaWdvIGVtIHZleiBkbyByZXF1aXNpdG8/Il0sWyI0LjUiLCJPcyBkdWJsw6pzIGRlIHRlc3RlIChtb2Nrcy9mYWtlcykgZXNjb25kZW0gbyBjb21wb3J0YW1lbnRvIHJlYWwgcXVlIGltcG9ydGE/Il1dXSxbIlNlw6fDo28gNSDigJQgTWFudXRlbmliaWxpZGFkZSBlIGxlZ2liaWxpZGFkZSIsIlJldmlzb3IgQyIsW1siNS4xIiwiSMOhIG7Dum1lcm9zIG3DoWdpY29zPyBBbGd1bWEgY29uc3RhbnRlIGFwYXJlY2UgPHN0cm9uZz5kdXBsaWNhZGEgY29tIHZhbG9yZXMgZGlmZXJlbnRlczwvc3Ryb25nPj8iXSxbIjUuMiIsIk5vbWVzIGRlIHZhcmnDoXZlaXMsIG3DqXRvZG9zIGUgcGFyw6JtZXRyb3MgZGl6ZW0gbyBxdWUgYSBjb2lzYSDDqT8iXSxbIjUuMyIsIk8gY29udHJhdG8gZGUgcmV0b3JubyDDqSBjb25zaXN0ZW50ZSAobyBtw6l0b2RvIHNlbXByZSBkZXZvbHZlIG8gbWVzbW8gdGlwby9mb3JtYSk/Il0sWyI1LjQiLCJIw6EgY8OzZGlnbyBtb3J0bywgY2FtcG8gZGVjbGFyYWRvIGUgbnVuY2EgdXNhZG8sIG91IGNvbWVudMOhcmlvIHF1ZSBtZW50ZT8iXSxbIjUuNSIsIlVtIGRlc2Vudm9sdmVkb3Igbm92byBlbnRlbmRlcmlhIGVzdGUgbcOpdG9kbyBzZW0gcGVyZ3VudGFyIGFvIGF1dG9yPyJdXV1dLCJDSEVDS0xJU1RfUkVHUkFTIjpbIjxzdHJvbmc+TWFycXVlIG8gaXRlbSBtZXNtbyBxdWFuZG8gZXN0aXZlciB0dWRvIGNlcnRvLjwvc3Ryb25nPiBJdGVtIG7Do28gcGVyY29ycmlkbyDDqSDDoXJlYSBuw6NvIHJldmlzYWRhLiIsIjxzdHJvbmc+VW0gaXRlbSBwb2RlIGdlcmFyIG1haXMgZGUgdW0gZGVmZWl0by48L3N0cm9uZz4gTsOjbyBwYXJlIG5vIHByaW1laXJvLiIsIjxzdHJvbmc+Q2hlY2tsaXN0IG7Do28gc3Vic3RpdHVpIHBlbnNhci48L3N0cm9uZz4gRWxlIGdhcmFudGUgbyBwaXNvLCBuw6NvIG8gdGV0by4iXSwiUFJPTVBUX0EiOiJSZXZpc2UgZXN0ZSBjw7NkaWdvIFB5dGhvbiBlIGFwb250ZSBvcyBwcm9ibGVtYXMuXG5cbjxjb2xlIGFxdWkgbyBjb250ZcO6ZG8gY29tcGxldG8gZGUgbWF0cmljdWxhLnB5LCBkYSBicmFuY2ggZG8gUFIgIzE+IiwiUFJPTVBUX0IiOiIjIFBhcGVsXG5Wb2PDqiDDqSByZXZpc29yIGRlIGPDs2RpZ28gc8OqbmlvciBkZSB1bWEgZXF1aXBlIHF1ZSBzZWd1ZSBhIG5vcm1hIElFRUUgMTAyOC5cblN1YSB0YXJlZmEgw6kgREVURUNUQVIgZGVmZWl0b3MsIG7Do28gY29ycmlnaS1sb3MuXG5cbiMgQ29udGV4dG8gZG8gc2lzdGVtYVxuU2lzdGVtYSBhY2Fkw6ptaWNvIHVuaXZlcnNpdMOhcmlvLCBtw7NkdWxvIGRlIG1hdHLDrWN1bGEuIFZhaSBwYXJhIHByb2R1w6fDo28gbm9cbnBlcsOtb2RvIGRlIG1hdHLDrWN1bGEsIGNvbSBhbHRhIGNvbmNvcnLDqm5jaWEgZGUgYWNlc3NvcyBzaW11bHTDom5lb3MuXG5cbiMgRXNwZWNpZmljYcOnw6NvIHF1ZSBvIGPDs2RpZ28gZGV2ZSBjdW1wcmlyIChmb250ZSBkYSB2ZXJkYWRlKVxuPGNvbGUgYXF1aSBvIGNvbnRlw7pkbyBjb21wbGV0byBkZSBkb2NzL1JGLTAxNC5tZD5cblxuIyBBcnRlZmF0b3Mgc29iIHJldmlzw6NvXG4jIyBBcnF1aXZvIDEg4oCUIG1hdHJpY3VsYS5weVxuPGNvbGUgYXF1aSBtYXRyaWN1bGEucHk+XG5cbiMjIEFycXVpdm8gMiDigJQgdGVzdF9tYXRyaWN1bGEucHlcbjxjb2xlIGFxdWkgdGVzdF9tYXRyaWN1bGEucHk+XG5cbiMgQ2hlY2tsaXN0IGEgYXBsaWNhclxuPGNvbGUgYXF1aSBvIGNoZWNrbGlzdCByZWNlYmlkbz5cblxuIyBJbnN0cnXDp8O1ZXNcbjEuIFBlcmNvcnJhIG8gY2hlY2tsaXN0IHNlw6fDo28gcG9yIHNlw6fDo28uIFBhcmEgQ0FEQSByZWdyYSBkZSBuZWfDs2Npb1xuICAgKFJOLTAxIGEgUk4tMDgpLCBkaWdhIGV4cGxpY2l0YW1lbnRlOiBpbXBsZW1lbnRhZGEgY29ycmV0YW1lbnRlLFxuICAgaW1wbGVtZW50YWRhIHBhcmNpYWxtZW50ZSwgb3UgYXVzZW50ZSDigJQgZSBjaXRlIG8gdHJlY2hvIGRlIGPDs2RpZ28uXG4yLiBWZXJpZmlxdWUgc2UgY2FkYSBjcml0w6lyaW8gZGUgYWNlaXRhw6fDo28gcGFzc2FyaWEgbmVzdGUgY8OzZGlnby5cbjMuIEF2YWxpZSBzZSBvcyB0ZXN0ZXMgcHJvdmFtIGNvbXBvcnRhbWVudG8gb3UgYXBlbmFzIGV4ZWN1w6fDo28uXG40LiBDbGFzc2lmaXF1ZSBjYWRhIGRlZmVpdG8gZW0gc2V2ZXJpZGFkZSBBbHRhIC8gTcOpZGlhIC8gQmFpeGEgZSBlbSB0aXBvXG4gICBSRVEgLyBMT0cgLyBTRUcgLyBUU1QgLyBNQU4uXG41LiBBbyBmaW5hbCwgbGlzdGUgc2VwYXJhZGFtZW50ZTogKGEpIG8gcXVlIHZvY8OqIE7Dg08gY29uc2VndWl1IHZlcmlmaWNhclxuICAgY29tIG8gbWF0ZXJpYWwgZm9ybmVjaWRvLCBlIChiKSBhY2hhZG9zIHNvYnJlIG9zIHF1YWlzIHZvY8OqIHRlbSBiYWl4YVxuICAgY29uZmlhbsOnYS5cblxuIyBGb3JtYXRvIGRlIHNhw61kYVxuVW1hIHRhYmVsYTogfCBJRCB8IEFycXVpdm8vdHJlY2hvIHwgVGlwbyB8IFNldmVyaWRhZGUgfCBEZXNjcmnDp8OjbyBkbyBkZWZlaXRvIHxcblNlZ3VpZGEgZGFzIHNlw6fDtWVzIChhKSBlIChiKS5cblxuIyBSZXN0cmnDp8Ojb1xuTsOjbyBpbnZlbnRlIGxpbmhhcyBvdSBmdW7Dp8O1ZXMgcXVlIG7Do28gZXN0w6NvIG5vIGPDs2RpZ28uIFNlIG7Do28gdGl2ZXIgY2VydGV6YVxuZGUgcXVlIGFsZ28gw6kgZGVmZWl0bywgZGlnYSBxdWUgbsOjbyB0ZW0gY2VydGV6YSBlbSB2ZXogZGUgYWZpcm1hci4ifQo=";
+
+const __D = JSON.parse(new TextDecoder().decode(
+  Uint8Array.from(atob(__BLOB), c => c.charCodeAt(0))));
+
+const MODOS = __D.MODOS;
+const GRUPOS = __D.GRUPOS;
+const CHECKLIST = __D.CHECKLIST;
+const CHECKLIST_REGRAS = __D.CHECKLIST_REGRAS;
+const PROMPT_A = __D.PROMPT_A;
+const PROMPT_B = __D.PROMPT_B;
+</script>
+
+<script>
+"use strict";
+
+/* ---------- utilidades ---------- */
+
+const $ = (sel, el) => (el || document).querySelector(sel);
+const app = document.getElementById("app");
+const params = new URLSearchParams(location.search);
+
+function esc(s){
+  return String(s == null ? "" : s).replace(/[&<>"']/g, c =>
+    ({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+}
+function agora(){
+  const d = new Date();
+  return d.toTimeString().slice(0,5);
+}
+function tabela(cabecalhos, linhas, empilhavel){
+  const cls = empilhavel ? " stack" : "";
+  return '<div class="scroll' + cls + '"><table class="' + (empilhavel ? "stack" : "") + '"><thead><tr>' +
+    cabecalhos.map(h => "<th>" + h + "</th>").join("") +
+    "</tr></thead><tbody>" +
+    linhas.map(l => "<tr>" + l.map((c, i) =>
+      '<td data-rot="' + cabecalhos[i].replace(/<[^>]+>/g, "") + '">' + c + "</td>").join("") + "</tr>").join("") +
+    "</tbody></table></div>";
+}
+
+/* ---------- blocos de conteúdo ---------- */
+
+function blocoCartao(modoId){
+  const m = MODOS[modoId];
+  let h = '<section class="panelcard">';
+  h += '<div class="sec-head"><span class="eyebrow">Cartão de modo · ' + esc(modoId) + '</span></div>';
+  h += "<h2>" + esc(m.nome) + "</h2>";
+  h += '<p class="note">' + m.sub + "</p>";
+  h += "<h3 style=\"margin-top:18px\">Papéis</h3>";
+  h += tabela(["Papel","Quantos","O que faz"], m.papeis.map(p => [ "<strong>" + p[0] + "</strong>", p[1], p[2] ]), true);
+  h += "<h3 style=\"margin-top:18px\">Procedimento</h3><ol>" + m.proc.map(p => "<li>" + p + "</li>").join("") + "</ol>";
+  if (m.restricoes.length){
+    h += "<h3>Restrições</h3><ul>" + m.restricoes.map(p => "<li>" + p + "</li>").join("") + "</ul>";
+  }
+  if (m.regra){
+    h += '<div class="rule"><strong>Regra de ouro.</strong> ' + m.regra + "</div>";
+  }
+  if (m.menor){
+    h += '<p class="note"><strong>Se faltar gente hoje:</strong> ' + m.menor + "</p>";
+  }
+  h += '<p class="note" style="margin-top:14px">⏱ <strong>20 minutos.</strong> O cronômetro é público — quando fechar 20 min, parem, mesmo no meio de um achado.</p>';
+  return h + "</section>";
+}
+
+function blocoChecklist(){
+  let h = '<section class="panelcard check">';
+  h += '<div class="sec-head"><span class="eyebrow">Material do seu grupo</span></div>';
+  h += "<h2>Checklist de Revisão — Equipe SIGA</h2>";
+  h += '<p class="note">Checklist genérico da equipe: ele não aponta os defeitos, ele orienta o olhar. O Leitor conduz item a item.</p>';
+  CHECKLIST.forEach(([titulo, dono, itens], si) => {
+    h += '<h3 style="margin-top:20px">' + esc(titulo) + ' <span class="note" style="font-weight:400">(' + esc(dono) + ")</span></h3><ul>";
+    itens.forEach(([num, txt], ii) => {
+      const id = "ck-" + si + "-" + ii;
+      h += '<li><label class="item" for="' + id + '"><input type="checkbox" id="' + id + '">' +
+           '<span><span class="ck-num">' + num + "</span> " + txt + "</span></label></li>";
+    });
+    h += "</ul>";
+  });
+  h += '<div class="rule"><strong>Regras de uso.</strong><ol style="margin:.4em 0 0">' +
+       CHECKLIST_REGRAS.map(r => "<li>" + r + "</li>").join("") + "</ol></div>";
+  return h + "</section>";
+}
+
+function blocoPrompt(qual){
+  const texto = qual === "A" ? PROMPT_A : PROMPT_B;
+  let h = '<section class="panelcard">';
+  h += '<div class="sec-head"><span class="eyebrow">Material do seu grupo</span></div>';
+  h += "<h2>PROMPT " + qual + "</h2>";
+  h += '<p class="note">Use qualquer assistente disponível (Claude, ChatGPT, Gemini, Copilot Chat). <strong>Cole o prompt exatamente como está</strong>, sem melhorar. Os trechos entre <code>&lt; &gt;</code> vocês substituem pelo conteúdo real dos arquivos do PR.</p>';
+  h += '<div class="row" style="margin:12px 0"><button class="btn" id="copiarPrompt">Copiar prompt</button>' +
+       '<span class="status" id="copiaStatus"></span></div>';
+  h += '<pre class="prompt" id="promptTexto">' + esc(texto) + "</pre>";
+  return h + "</section>";
+}
+
+function blocoLinks(){
+  return '<section class="panelcard">' +
+    '<div class="sec-head"><span class="eyebrow">Artefatos sob revisão</span></div>' +
+    '<p class="note">Não é preciso ter conta no GitHub — vocês só vão ler.</p>' +
+    tabela(["Onde","O que é"], [
+      ['<a href="' + PR_URL + '" target="_blank" rel="noopener"><strong>PR #1 → Files changed</strong></a>',
+       "O diff sob revisão: <code>matricula.py</code> e <code>test_matricula.py</code>"],
+      ['<a href="' + REPO + '/blob/main/docs/RF-014.md" target="_blank" rel="noopener"><code>docs/RF-014.md</code></a>',
+       "Especificação do requisito — <strong>a fonte da verdade</strong>"],
+      ['<a href="' + REPO + '/blob/main/CONTRIBUTING.md" target="_blank" rel="noopener"><code>CONTRIBUTING.md</code></a>',
+       "Padrão de codificação da equipe"]
+    ]) +
+    '<div class="rule"><strong>As duas regras que protegem o exercício.</strong> Ninguém comenta no GitHub — os achados vão para a ata. E nada de linter, análise estática ou IA, exceto quem recebeu o cartão de IA.</div>' +
+    "</section>";
+}
+
+/* ---------- ata ---------- */
+
+const TIPOS = ["", "REQ", "LOG", "SEG", "TST", "MAN"];
+const SEVS  = ["", "A", "M", "B"];
+
+function linhaDefeito(i, temIA){
+  const id = "D-" + String(i + 1).padStart(2, "0");
+  return '<tr data-def="' + i + '">' +
+    '<td class="mono num c-id" data-rot="ID">' + id + "</td>" +
+    '<td class="c-arq" data-rot="Arquivo / linha"><input id="def-arq-' + i + '" placeholder="matricula.py:81" aria-label="Arquivo e linha do defeito ' + id + '"></td>' +
+    '<td class="c-tipo" data-rot="Tipo"><select id="def-tipo-' + i + '" aria-label="Tipo do defeito ' + id + '">' + TIPOS.map(t => "<option>" + t + "</option>").join("") + "</select></td>" +
+    '<td class="c-sev" data-rot="Severidade"><select id="def-sev-' + i + '" aria-label="Severidade do defeito ' + id + '">' + SEVS.map(t => "<option>" + t + "</option>").join("") + "</select></td>" +
+    '<td class="c-desc" data-rot="Descrição do defeito"><textarea id="def-desc-' + i + '" rows="3" placeholder="O que está errado — não como consertar" aria-label="Descrição do defeito ' + id + '"></textarea></td>' +
+    '<td class="c-quem" data-rot="Quem achou"><input id="def-quem-' + i + '" placeholder="nome" aria-label="Quem achou o defeito ' + id + '"></td>' +
+    (temIA ? '<td class="c-orig" data-rot="Origem"><select id="def-orig-' + i + '" aria-label="Origem do defeito ' + id + '"><option></option><option>H</option><option>IA</option></select></td>' : "") +
+    "</tr>";
+}
+
+function blocoAta(g, cfg){
+  const m = MODOS[cfg.modo];
+  const temIA = cfg.extra === "promptA" || cfg.extra === "promptB";
+  let h = '<section class="panelcard" id="ataBloco">';
+  h += '<div class="sec-head"><span class="eyebrow">Entrega do grupo</span></div>';
+  h += "<h2>Ata de revisão</h2>";
+  h += '<p class="note">É o artefato real que uma revisão produz, e é o que a professora avalia. <strong>Um notebook do grupo preenche</strong> — quem salvar por último sobrescreve os demais.</p>';
+
+  h += "<h3 style=\"margin-top:20px\">1 · Identificação</h3>";
+  h += '<div class="grid2">' +
+    '<div><label for="f-inicio">Horário de início</label><input id="f-inicio" placeholder="' + agora() + '"></div>' +
+    '<div><label for="f-fim">Horário de fim</label><input id="f-fim" placeholder="hh:mm"></div>' +
+    '<div><label for="f-tempo">Tempo efetivo (min)</label><input id="f-tempo" type="number" min="1" max="90" inputmode="numeric"></div>' +
+    "</div>";
+  h += '<p class="note">Modo recebido: <strong>' + esc(cfg.modo + " — " + m.nome) + "</strong> · Artefatos: PR #1 (<code>matricula.py</code>, <code>test_matricula.py</code>), referência <code>docs/RF-014.md</code> e <code>CONTRIBUTING.md</code>.</p>";
+
+  h += "<h3 style=\"margin-top:22px\">2 · Papéis</h3>";
+  h += '<p class="note">Os papéis já vêm do cartão do seu modo. Se faltou gente, ajuste segundo a regra do cartão.</p>';
+  h += tabela(["Papel","Integrante"], cfg.papeis.map((p, i) =>
+    ['<input id="pap-papel-' + i + '" value="' + esc(p) + '" aria-label="Papel ' + (i+1) + '">',
+     '<input id="pap-nome-' + i + '" placeholder="nome" aria-label="Integrante no papel ' + (i+1) + '">']), true);
+
+  h += "<h3 style=\"margin-top:22px\">3 · Registro de defeitos</h3>";
+  h += '<p class="note"><strong>Severidade:</strong> A = impede o merge · M = comportamento errado em caso específico · B = qualidade, legibilidade. ' +
+       "<strong>Tipo:</strong> REQ requisito · LOG lógica · SEG segurança · TST teste · MAN manutenibilidade." +
+       (temIA ? " <strong>Origem:</strong> H humano · IA sugerido pela IA e confirmado." : "") +
+       " <strong>Achado sem localização não conta.</strong></p>";
+  const cab = ["ID","Arquivo / linha","Tipo","Sev.","Descrição","Quem achou"].concat(temIA ? ["Origem"] : []);
+  h += '<div class="scroll stack"><table id="tabDefeitos" class="stack"><thead><tr>' + cab.map(c => "<th>" + c + "</th>").join("") +
+       '</tr></thead><tbody id="corpoDefeitos"></tbody></table></div>';
+  h += '<div class="row" style="margin-top:10px"><button class="btn ghost" id="maisDefeito" type="button">+ adicionar linha</button></div>';
+
+  h += "<h3 style=\"margin-top:22px\">4 · Achados descartados (falsos positivos)</h3>";
+  h += '<p class="note">Metralhar não vence o campeonato: falso positivo custa no quadro final.</p>';
+  h += '<div class="scroll stack"><table class="stack"><thead><tr><th>Achado levantado</th><th>Por que foi descartado</th></tr></thead><tbody id="corpoFP"></tbody></table></div>';
+  h += '<div class="row" style="margin-top:10px"><button class="btn ghost" id="maisFP" type="button">+ adicionar linha</button></div>';
+
+  h += "<h3 style=\"margin-top:22px\">5 · Números para o quadro comparativo</h3>";
+  h += '<div class="scroll"><table><tbody>' +
+    '<tr><td>Total de achados registrados</td><td class="mono num" id="n-achados">0</td></tr>' +
+    '<tr><td>Achados descartados como falsos positivos</td><td class="mono num" id="n-fp">0</td></tr>' +
+    '<tr><td>Tempo efetivo de revisão</td><td class="mono num" id="n-tempo">—</td></tr>' +
+    '<tr><td>Linhas revisadas por minuto (≈150 ÷ tempo)</td><td class="mono num" id="n-ritmo">—</td></tr>' +
+    "</tbody></table></div>";
+
+  h += "<h3 style=\"margin-top:22px\">6 · Decisão da revisão</h3>";
+  h += '<div><label for="f-decisao">Decisão</label><select id="f-decisao">' +
+    ["", "Aprovado — pode ir para produção",
+     "Aprovado com ressalvas — corrigir os itens de severidade B antes do merge",
+     "Reprovado / requer nova revisão — há defeitos de severidade A ou M"]
+      .map(o => "<option>" + o + "</option>").join("") + "</select></div>";
+  h += '<div style="margin-top:10px"><label for="f-justificativa">Justificativa em uma frase</label><textarea id="f-justificativa" rows="2"></textarea></div>';
+
+  h += "<h3 style=\"margin-top:22px\">7 · Reflexão do grupo</h3>";
+  h += '<div style="display:grid;gap:12px">' +
+    '<div><label for="f-r1">a) O que o nosso modo de revisão pegou bem?</label><textarea id="f-r1" rows="2"></textarea></div>' +
+    '<div><label for="f-r2">b) O que ele claramente deixou passar?</label><textarea id="f-r2" rows="2"></textarea></div>' +
+    '<div><label for="f-r3">c) O que mudaríamos no processo se tivéssemos mais 20 minutos?</label><textarea id="f-r3" rows="2"></textarea></div>' +
+    "</div>";
+
+  h += '<div class="rule"><strong>Como entregar.</strong> ' +
+    (FORM_URL
+      ? "1. <strong>Gerar a ata em PDF</strong> — abre a caixa de impressão; em <em>Destino</em>, escolham <em>Salvar como PDF</em> e guardem o arquivo. " +
+        "2. <strong>Enviar a ata</strong> — abre o formulário da squad com o grupo de vocês já marcado. " +
+        "3. Anexem o PDF salvo. O formulário pede <strong>login com a conta institucional</strong>; se pedir para trocar de conta, é essa que vale."
+      : "Gerem o PDF e entreguem do jeito que a professora combinar. O botão de copiar serve se ela preferir o texto colado.") +
+    "</div>";
+  h += '<div class="row" style="margin-top:18px">' +
+    '<button class="btn" id="imprimirAta" type="button">Gerar a ata em PDF</button>' +
+    (FORM_URL ? '<button class="btn" id="enviarAta" type="button">Enviar a ata</button>' : "") +
+    '<button class="btn ghost" id="copiarAta" type="button">Copiar a ata como texto</button>' +
+    '<span class="status" id="ataStatus">rascunho guardado neste navegador enquanto vocês digitam</span></div>';
+  return h + "</section>";
+}
+
+/* ---------- estado da ata ---------- */
+
+let NDEF = 0, NFP = 0, TEM_IA = false, GRUPO = null;
+
+function addDefeito(){
+  $("#corpoDefeitos").insertAdjacentHTML("beforeend", linhaDefeito(NDEF, TEM_IA));
+  NDEF++;
+  const ta = document.getElementById("def-desc-" + (NDEF - 1));
+  if (ta) crescer(ta);
+}
+function addFP(){
+  const i = NFP++;
+  $("#corpoFP").insertAdjacentHTML("beforeend",
+    '<tr><td data-rot="Achado levantado"><input id="fp-achado-' + i + '" aria-label="Achado descartado ' + (i+1) + '"></td>' +
+    '<td data-rot="Por que foi descartado"><input id="fp-motivo-' + i + '" placeholder="por que não é defeito" aria-label="Motivo do descarte ' + (i+1) + '"></td></tr>');
+}
+function val(id){ const el = document.getElementById(id); return el ? el.value.trim() : ""; }
+
+function crescer(el){
+  if (!el || el.tagName !== "TEXTAREA") return;
+  el.style.height = "auto";
+  el.style.height = (el.scrollHeight + 2) + "px";
+}
+function crescerTodas(){ app.querySelectorAll("textarea").forEach(crescer); }
+
+function coletarAta(){
+  const defeitos = [];
+  for (let i = 0; i < NDEF; i++){
+    const d = {arquivo: val("def-arq-" + i), tipo: val("def-tipo-" + i), sev: val("def-sev-" + i),
+               descricao: val("def-desc-" + i), quem: val("def-quem-" + i), origem: val("def-orig-" + i)};
+    if (d.arquivo || d.descricao) defeitos.push(d);
+  }
+  const fp = [];
+  for (let i = 0; i < NFP; i++){
+    const f = {achado: val("fp-achado-" + i), motivo: val("fp-motivo-" + i)};
+    if (f.achado) fp.push(f);
+  }
+  const cfg = GRUPOS[GRUPO];
+  const papeis = cfg.papeis.map((_, i) => ({papel: val("pap-papel-" + i), nome: val("pap-nome-" + i)}));
+  const tempo = Number(val("f-tempo")) || 0;
+  return {
+    grupo: "G" + GRUPO, modo: cfg.modo, modoNome: MODOS[cfg.modo].nome,
+    inicio: val("f-inicio"), fim: val("f-fim"), tempo: tempo,
+    papeis: papeis, defeitos: defeitos, falsosPositivos: fp,
+    decisao: val("f-decisao"), justificativa: val("f-justificativa"),
+    reflexao: {a: val("f-r1"), b: val("f-r2"), c: val("f-r3")},
+    totalAchados: defeitos.length, totalDescartados: fp.length,
+    ritmo: tempo > 0 ? Math.round(150 / tempo * 10) / 10 : null,
+    atualizadoEm: new Date().toISOString()
+  };
+}
+
+function aplicarAta(a){
+  if (!a) return;
+  const set = (id, v) => { const el = document.getElementById(id); if (el && v != null) el.value = v; };
+  set("f-inicio", a.inicio); set("f-fim", a.fim); set("f-tempo", a.tempo || "");
+  set("f-decisao", a.decisao); set("f-justificativa", a.justificativa);
+  if (a.reflexao){ set("f-r1", a.reflexao.a); set("f-r2", a.reflexao.b); set("f-r3", a.reflexao.c); }
+  (a.papeis || []).forEach((p, i) => { set("pap-papel-" + i, p.papel); set("pap-nome-" + i, p.nome); });
+  (a.defeitos || []).forEach((d, i) => {
+    while (NDEF <= i) addDefeito();
+    set("def-arq-" + i, d.arquivo); set("def-tipo-" + i, d.tipo); set("def-sev-" + i, d.sev);
+    set("def-desc-" + i, d.descricao); set("def-quem-" + i, d.quem); set("def-orig-" + i, d.origem);
+  });
+  (a.falsosPositivos || []).forEach((f, i) => {
+    while (NFP <= i) addFP();
+    set("fp-achado-" + i, f.achado); set("fp-motivo-" + i, f.motivo);
+  });
+  recalcular();
+}
+
+function recalcular(){
+  const a = coletarAta();
+  $("#n-achados").textContent = a.totalAchados;
+  $("#n-fp").textContent = a.totalDescartados;
+  $("#n-tempo").textContent = a.tempo ? a.tempo + " min" : "—";
+  $("#n-ritmo").textContent = a.ritmo ? a.ritmo + " linhas/min" : "—";
+  try { localStorage.setItem("ata-G" + GRUPO, JSON.stringify(a)); } catch (e) {}
+}
+
+/* ---------- telas ---------- */
+
+function telaGrupo(g){
+  const cfg = GRUPOS[g];
+  GRUPO = g; TEM_IA = cfg.extra === "promptA" || cfg.extra === "promptB";
+  const m = MODOS[cfg.modo];
+
+  document.getElementById("topTag").textContent = "G" + g;
+  document.getElementById("topModo").textContent = m.nome;
+  document.getElementById("topClock").textContent = "PR #1 · 20 min";
+  document.title = "G" + g + " · Campeonato de Revisão";
+
+  let h = '<section style="margin-top:26px">';
+  h += '<span class="eyebrow">Atividade prática · 15/09/2026</span>';
+  h += "<h1>Grupo " + g + " — vocês são a revisão</h1>";
+  h += '<p>O <strong>@dev.junior</strong> abriu o PR #1 implementando o <strong>RF-014 — Matrícula de aluno em turma de disciplina</strong>: ' +
+       "<em>&ldquo;testes passando localmente (2/2 verdes), acho que dá pra fazer o merge hoje&rdquo;</em>. O pipeline está verde, " +
+       "a pessoa que revisaria está de férias, e faltam duas semanas para o período de matrícula.</p>" +
+       '<p class="note">Cada grupo recebeu um modo de revisão diferente e nenhum sabe qual é o do vizinho. ' +
+       "Não troquem de modo, não &ldquo;melhorem&rdquo; o método no meio do caminho: a comparação no final é a aula.</p>";
+  h += "</section>";
+  h += blocoCartao(cfg.modo);
+  if (cfg.extra === "checklist") h += blocoChecklist();
+  if (cfg.extra === "promptA") h += blocoPrompt("A");
+  if (cfg.extra === "promptB") h += blocoPrompt("B");
+  h += blocoLinks();
+  h += blocoAta(g, cfg);
+  app.innerHTML = h;
+
+  for (let i = 0; i < 5; i++) addDefeito();
+  for (let i = 0; i < 2; i++) addFP();
+  $("#maisDefeito").addEventListener("click", addDefeito);
+  $("#maisFP").addEventListener("click", addFP);
+  $("#imprimirAta").addEventListener("click", () => {
+    document.body.classList.add("so-ata");
+    window.print();
+  });
+  window.addEventListener("afterprint", () => document.body.classList.remove("so-ata"));
+  const enviar = $("#enviarAta");
+  if (enviar) enviar.addEventListener("click", () => {
+    let destino = FORM_URL;
+    if (FORM_CAMPO_GRUPO){
+      destino += (destino.indexOf("?") >= 0 ? "&" : "?") +
+                 "usp=pp_url&" + FORM_CAMPO_GRUPO + "=" + encodeURIComponent("G" + GRUPO);
+    }
+    window.open(destino, "_blank", "noopener");
+  });
+  $("#copiarAta").addEventListener("click", async () => {
+    const status = $("#ataStatus");
+    try {
+      await navigator.clipboard.writeText(ataEmTexto(coletarAta()));
+      status.textContent = "ata copiada — cole onde a professora pediu";
+      status.className = "status ok";
+    } catch (e) {
+      status.textContent = "o navegador bloqueou a cópia — use o PDF";
+      status.className = "status err";
+    }
+  });
+  app.addEventListener("input", e => {
+    crescer(e.target);
+    recalcular();
+  });
+
+  const copiar = $("#copiarPrompt");
+  if (copiar) copiar.addEventListener("click", async () => {
+    const texto = cfg.extra === "promptA" ? PROMPT_A : PROMPT_B;
+    try { await navigator.clipboard.writeText(texto); $("#copiaStatus").textContent = "copiado"; }
+    catch (e) { $("#copiaStatus").textContent = "selecione o texto abaixo e copie à mão"; }
+  });
+
+  document.getElementById("voltar").hidden = false;
+
+  let rascunho = null;
+  try { rascunho = JSON.parse(localStorage.getItem("ata-G" + g) || "null"); } catch (e) {}
+  if (rascunho) aplicarAta(rascunho);
+  recalcular();
+  crescerTodas();
+  recalcular();
+}
+
+/* ---------- exportação da ata ---------- */
+
+function ataEmTexto(a){
+  const L = [];
+  L.push("ATA DE REVISAO - PR #1 (RF-014)");
+  L.push("Grupo: " + a.grupo + "  |  Modo: " + a.modo + " - " + a.modoNome);
+  L.push("Inicio: " + (a.inicio || "-") + "  Fim: " + (a.fim || "-") + "  Tempo efetivo: " + (a.tempo || "-") + " min");
+  L.push("Artefatos: PR #1 (matricula.py, test_matricula.py) - referencia: docs/RF-014.md, CONTRIBUTING.md");
+  L.push("");
+  L.push("PAPEIS");
+  a.papeis.forEach(p => { if (p.nome) L.push("  - " + p.papel + ": " + p.nome); });
+  L.push("");
+  L.push("DEFEITOS (" + a.totalAchados + ")");
+  a.defeitos.forEach((d, i) => {
+    L.push("  D-" + String(i + 1).padStart(2, "0") + " | " + d.arquivo + " | " + d.tipo + " | " + d.sev +
+           (d.origem ? " | " + d.origem : "") + " | achado por " + (d.quem || "-"));
+    L.push("       " + d.descricao);
+  });
+  L.push("");
+  L.push("FALSOS POSITIVOS (" + a.totalDescartados + ")");
+  a.falsosPositivos.forEach(f => L.push("  - " + f.achado + "  >> " + f.motivo));
+  L.push("");
+  L.push("NUMEROS PARA O QUADRO");
+  L.push("  Achados registrados: " + a.totalAchados);
+  L.push("  Descartados como falso positivo: " + a.totalDescartados);
+  L.push("  Tempo efetivo: " + (a.tempo || "-") + " min");
+  L.push("  Linhas por minuto (150 / tempo): " + (a.ritmo != null ? a.ritmo : "-"));
+  L.push("");
+  L.push("DECISAO: " + (a.decisao || "-"));
+  L.push("Justificativa: " + (a.justificativa || "-"));
+  L.push("");
+  L.push("REFLEXAO");
+  L.push("  a) Pegou bem: " + (a.reflexao.a || "-"));
+  L.push("  b) Deixou passar: " + (a.reflexao.b || "-"));
+  L.push("  c) Mudariamos: " + (a.reflexao.c || "-"));
+  return L.join(String.fromCharCode(10));
+}
+
+function telaInicial(){
+  document.title = "Campeonato de Revisão";
+  document.getElementById("voltar").hidden = true;
+  document.getElementById("topTag").textContent = "SIGA · PR #1";
+  document.getElementById("topModo").textContent = "Campeonato de Revisão";
+  document.getElementById("topClock").textContent = "15/09/2026 · 20 min de revisão";
+  const botoes = Object.keys(GRUPOS).map(g =>
+    '<button class="btn ghost grupoBtn" type="button" data-g="' + g + '">Grupo ' + g + "</button>").join("");
+  app.innerHTML =
+    '<section style="margin-top:26px"><span class="eyebrow">Atividade prática · 15/09/2026</span>' +
+    "<h1>Campeonato de Revisão</h1>" +
+    "<p>Sete grupos, o mesmo Pull Request, sete modos de revisão diferentes. " +
+    "No final, um quadro comparativo mostra o que cada modo pegou — e o que deixou passar.</p></section>" +
+    '<section class="panelcard"><h2>Qual é o seu grupo?</h2>' +
+    '<p class="note">Toque no número do seu grupo. Cada grupo vê apenas o próprio modo de revisão — ' +
+    "entrar no grupo do vizinho estraga a comparação final para os dois.</p>" +
+    '<div class="row" style="margin-top:14px">' + botoes + "</div>" +
+    '<p class="note" style="margin-top:16px"><a href="' + PR_URL + '" target="_blank" rel="noopener">PR #1 → Files changed</a> — é ali que a revisão acontece.</p></section>';
+  app.querySelectorAll(".grupoBtn").forEach(b =>
+    b.addEventListener("click", () => telaGrupo(b.dataset.g)));
+}
+
+function telaPainel(){
+  document.title = "Painel da squad · Campeonato de Revisão";
+  document.getElementById("topTag").textContent = "SQUAD";
+  document.getElementById("topModo").textContent = "Painel da atividade";
+  let h = '<section style="margin-top:26px"><span class="eyebrow">Uso interno da squad</span>' +
+    "<h1>Painel da atividade</h1>" +
+    '<p class="note">Uma folha de QRs para recortar e distribuir — é o que substitui os cartões, o checklist e os envelopes de prompt. ' +
+    "Não projete esta tela: ela revela o modo de cada grupo.</p>" +
+    '<div class="row noprint" style="margin-top:12px"><button class="btn ghost" id="imprimirQR" type="button">Imprimir a folha de QRs</button></div></section>';
+
+  h += '<section class="panelcard noprint"><div class="sec-head"><span class="eyebrow">Antes de imprimir</span></div>' +
+       "<h2>Cole aqui o link público da página</h2>" +
+       '<p class="note">Compartilhe esta página (menu de compartilhamento do artefato) e cole abaixo o link que os alunos vão abrir. ' +
+       "Os QRs são gerados a partir dele — se o link estiver errado, os sete QRs estarão errados juntos.</p>" +
+       '<label for="linkPublico">Link público</label><input id="linkPublico" spellcheck="false">' +
+       '<p class="note">Teste um: abra <code>&lt;link&gt;?g=1</code> numa aba anônima. Se cair na tela de escolha de grupo em vez do cartão do G1, ' +
+       "tudo bem — o aluno toca no número do grupo e chega no mesmo lugar.</p></section>";
+
+  h += '<section><div class="sec-head"><span class="eyebrow">Distribuição — recortar nas linhas tracejadas</span></div>' +
+       '<div class="qrsheet" id="qrsheet"></div></section>';
+
+  h += '<section class="panelcard noprint"><div class="sec-head"><span class="eyebrow">Como a squad recolhe</span></div>' +
+       "<h2>A entrega continua sendo a ata</h2>" +
+       '<p class="note">Cada grupo preenche a ata na própria página e entrega de um dos dois jeitos: ' +
+       "<strong>Gerar a ata em PDF</strong> (sai só a ata, sem o cartão nem o checklist) ou " +
+       "<strong>Copiar a ata como texto</strong>, para colar onde a professora pedir. " +
+       "O rascunho fica guardado no navegador do grupo — trocar de aba não perde nada, fechar o navegador perde.</p>" +
+       '<p class="note">O quadro comparativo segue no quadro branco, preenchido ao vivo pelo A5 conforme cada grupo reporta os quatro números: ' +
+       "achados reais, falsos positivos, críticos e achado exclusivo.</p></section>";
+
+  app.innerHTML = h;
+
+  const campo = $("#linkPublico");
+  let salvo = null;
+  try { salvo = localStorage.getItem("link-publico"); } catch (e) {}
+  campo.value = salvo || location.origin + location.pathname;
+  desenharQRs(campo.value);
+  campo.addEventListener("input", () => {
+    try { localStorage.setItem("link-publico", campo.value.trim()); } catch (e) {}
+    desenharQRs(campo.value.trim());
+  });
+  $("#imprimirQR").addEventListener("click", () => window.print());
+}
+
+function desenharQRs(base){
+  const sheet = $("#qrsheet");
+  sheet.innerHTML = "";
+  const limpo = (base || "").split("?")[0].split("#")[0];
+  Object.keys(GRUPOS).forEach(g => {
+    const url = limpo + "?g=" + g;
+    const cel = document.createElement("div");
+    cel.className = "qrcell";
+    cel.innerHTML = '<div class="g">Grupo ' + g + "</div>" +
+      '<div class="note" style="font-size:.8rem;margin-bottom:8px">aponte a câmera</div>' +
+      '<div class="qrbox"></div><div class="u">' + esc(url) + "</div>";
+    sheet.appendChild(cel);
+    if (window.QRCode){
+      new QRCode(cel.querySelector(".qrbox"), {text: url, width: 150, height: 150, correctLevel: QRCode.CorrectLevel.M});
+    }
+  });
+}
+
+document.getElementById("voltar").addEventListener("click", () => {
+  telaInicial();
+  window.scrollTo(0, 0);
+});
+
+/* ---------- rota ---------- */
+
+const hashG = (location.hash.match(/g=?(\d)/) || [])[1];
+const g = params.get("g") || hashG;
+if (params.get("painel") === "squad" || location.hash.indexOf("painel") >= 0) telaPainel();
+else if (g && GRUPOS[g]) telaGrupo(g);
+else telaInicial();
+</script>
